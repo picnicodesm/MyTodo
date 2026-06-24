@@ -8,22 +8,16 @@
 import SwiftUI
 import SwiftData
 
-final class ListItem: Identifiable {
-    var timeStamp: Date
-    
-    init(timeStamp: Date = Date()) {
-        self.timeStamp = timeStamp
-    }
-}
-
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query var items: [Item]
+    @Query private var items: [Item]
     
     var body: some View {
         NavigationStack {
-            List(items) { item in
-                Text("\(item.timeStamp.description)")
+            List {
+                ForEach(items) { item in
+                    Text("\(item.timestamp.description)")
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -38,11 +32,13 @@ struct ContentView: View {
     
     func addItem() {
         withAnimation {
-            items.append(ListItem())
+            let newItem = Item(timestamp: .now)
+            modelContext.insert(newItem)
         }
     }
 }
 
 #Preview {
     ContentView()
+        .modelContainer(for: Item.self, inMemory: true)
 }
