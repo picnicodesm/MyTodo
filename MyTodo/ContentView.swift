@@ -17,7 +17,8 @@ final class ListItem: Identifiable {
 }
 
 struct ContentView: View {
-    @State private var items: [ListItem] = []
+    @Environment(\.modelContext) private var modelContext
+    @Query var items: [Item]
     
     var body: some View {
         NavigationStack {
